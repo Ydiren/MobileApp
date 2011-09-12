@@ -40,7 +40,7 @@ var NotesApp = (function(){
 			// when localStorage updates, fetch the data from the store
 			this.localStorage.bind('update', function(){
 				collection.fetch();
-			})
+			}, this)
 		}
 	});
 
@@ -57,7 +57,7 @@ var NotesApp = (function(){
 			
 			note.set(attrs);
 			note.save();
-			
+
 			// Stop browser from submitting the form
 			e.preventDefault();
 
@@ -89,12 +89,13 @@ var NotesApp = (function(){
 		
 		initialize: function(){
 
+
 			// Bind 'this' to mean NoteListView for 
 			// each listed function
 			_.bindAll(this, 'addOne', 'addAll');
 
 			this.collection.bind('add', this.addOne);
-			this.collection.bind('refresh', this.addAll);
+			this.collection.bind('reset', this.addAll);
 
 			this.collection.fetch();
 		},
@@ -102,6 +103,8 @@ var NotesApp = (function(){
 		addOne: function(note){
 			var view = new NoteListItemView({model: note});
 			$(this.el).append(view.render().el);
+
+			//$(this.el).listview().listview('refresh');
 		},
 
 		addAll: function(){
@@ -138,7 +141,6 @@ var NotesApp = (function(){
 		el: $('#all_notes'),
 		collection: App.collections.all_notes
 	});
-
 
 	return App;
 })();
