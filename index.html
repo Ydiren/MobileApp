@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="css/jquery.mobile-1.0b2.css"/>
+
+</head>
+<body>
+	<!--
+	Home Page
+	-->
+	<div id="home" data-role="page"> 
+		<div data-role="header">
+			<h1>Local Notes</h1>
+			<a href="#new" data-rel="dialog" data-transition="pop" data-role="button" data-icon="plus" class="ui-btn-right">New</a>
+		</div>
+
+		<div data-role="content">
+			<a href="#new" data-rel="dialog" data-transition="pop" data-role="button" data-icon="plus" data-theme="b">
+				New Note
+			</a>
+
+			<ul data-role="listview" data-inset="true">
+				<li><a href="#all">All Notes</a></li>
+				<li><a href="#nearest">Nearest Notes</a></li>
+			</ul><!-- / -->
+		</div>
+		
+	</div>
+
+	<!--
+	New Note Form
+	-->
+	<div id="new" data-role="page">
+		<div data-role="header">
+			<h1>New Note</h1>
+		</div>
+
+		<div data-role="content">
+			<form action="#" method="post">
+				<div data-role="fieldcontain">
+					<label for="title">Title</label>
+					<input type="text" id="title" name="title" value="" placeholder="">
+				</div>
+				<div data-role="fieldcontain">
+					<label for="body">Body</label>
+					<textarea id="body" name="body" placeholder=""></textarea>
+				</div>
+
+				<button data-icon="check" data-theme="b">Save</button>
+			</form>
+		</div>
+	</div>
+
+	<!--
+	List of Notes
+	-->
+	<div id="all" data-role="page">
+		<div data-role="header">
+			<a href="#home" data-role="button" data-icon="arrow-l" data-rel="back">
+				Back
+			</a>
+			<h1>All Notes</h1>
+		</div>
+
+		<div data-role="content">
+			<ul id="all_notes" data-role="listview">
+			</ul>
+		</div>
+	</div>
+<!-- 
+	hidden script tag. Contains an underscore library template 
+	to define the format of each list entry
+-->
+	<script type="text/template" id="note-list-item-template">
+		<a href="#note_<%= note.id %>" ><%= note.get('title') %></a>
+	</script>
+
+	<script src="js/libs/jquery-1.6.2.js"></script>
+	<script src="js/libs/underscore.js"></script>
+	<script src="js/libs/backbone.js"></script>
+	<script src="js/libs/backbone.localStorage.js"></script>
+	<script src="js/application.js"></script>
+	<script src="js/libs/jquery.mobile-1.0b2.js"></script>
+</body>
+</html>
