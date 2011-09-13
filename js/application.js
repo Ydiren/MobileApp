@@ -104,7 +104,11 @@ var NotesApp = (function(){
 			var view = new NoteListItemView({model: note});
 			$(this.el).append(view.render().el);
 
-			//$(this.el).listview().listview('refresh');
+			// Check if jQuery Mobile has loaded before 
+			// calling listview initialisation
+			if('mobile' in $){
+				$(this.el).listview().listview('refresh');
+			}
 		},
 
 		addAll: function(){
@@ -129,6 +133,68 @@ var NotesApp = (function(){
 		}
 	});
 
+	// Container for NoteDetailView
+	// responsible for generating each NoteDetailView
+	var NoteDetailListView = Backbone.View.extend({
+		// Render NoteDetailViews into this element
+		el: $('#note-detail-list'),
+
+		initialize: function(){
+			// Make sure all functions execute with correct context
+			_.bindAll(this, 'addOne', 'addAll', 'render');
+
+			this.collection.bind('add', this.addOne);
+			this.collection.bind('reset', this.addAll);
+
+			this.collection.fetch();
+		},
+
+		addOne: function(note){
+			var view = new NoteDetailView({model: note});
+			$(this.el).append(view.render().el);
+			//if($.mobile){
+				$.mobile.initializePage();
+			//}
+		},
+
+		addAll: function(){
+			$(this.el).empty();
+			this.collection.each(this.addOne);
+		}
+	});
+
+	//
+	// Show Page
+	//
+	var NoteDetailView = Backbone.View.extend({
+		// view based on a tag
+		tagName: "DIV",
+
+		// Use a template to interpret values
+		template: _.template($('#note-detail-template').html()),
+
+		initialize: function(){
+			// make sure render is always called in the correct context
+			_.bindAll(this, 'render');
+
+			// Update this Div with jQuery Mobile data-role,
+			$(this.el).attr({
+				'data-role': 'page',
+				'id': "note_" + this.model.id
+			});
+
+			// Whenever the model changes, render this view
+			this.model.bind('change', this.render);
+		},
+
+		// Render the view into this View's element
+		render: function(){
+			$(this.el).html(this.template({note: this.model}));
+			return this;
+		}
+	});
+
+
 	window.Note = Note;
 
 	App.collections.all_notes = new NoteList();
@@ -139,6 +205,11 @@ var NotesApp = (function(){
 
 	App.views.list_alphabetical = new NoteListView({
 		el: $('#all_notes'),
+		collection: App.collections.all_notes
+	});
+
+	// Initialise view for collection of all note details
+	App.views.notes = new NoteDetailListView({
 		collection: App.collections.all_notes
 	});
 
