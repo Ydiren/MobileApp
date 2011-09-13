@@ -162,7 +162,7 @@ var NotesApp = (function(){
 			this.collection.each(this.addOne);
 		}
 	});
- 
+
 	//
 	// Show Page
 	//
